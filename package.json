@@ -2,9 +2,10 @@
   "name": "flutter_game_backend",
   "version": "1.0.0",
   "description": "backend of the flutter game",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"node app.js"
   },
   "author": "it_team",
   "license": "ISC",
