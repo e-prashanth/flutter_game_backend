@@ -19,6 +19,9 @@ app.all('/{*splat}', async function (req, res) {
     }
 });
 
-app.listen(port, function () {
-    console.log('Server running at http://127.0.0.1:' + port + '/');
-});
+// app.listen(port, function () {
+//     console.log('Server running at http://127.0.0.1:' + port + '/');
+// });
+
+
+module.exports = app;
