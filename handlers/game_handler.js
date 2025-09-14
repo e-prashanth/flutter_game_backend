@@ -45,17 +45,17 @@ var methods = {
 
         if (mysqlResponse && mysqlResponse.code && mysqlResponse.code === 200) {
           mysqlResponse.logMsg +=
-            " : 200 : GET_USER_DETAILS - given successfully." +
+            " : 200 : SAMPLE_GET - given successfully." +
             "\n";
           //   console.log(mysqlResponse);
           returnResponse = {
             code: 200,
-            msg: mysqlResponse.msg || [],
+            msg: "hii welcome to astragen",
             logMsg: mysqlResponse.logMsg,
           };
         } else {
           mysqlResponse.logMsg +=
-            " : 201 : GET_USER_DETAILS - failed to get data." +
+            " : 201 : SAMPLE_GET - failed to get data." +
             "\n";
 
           returnResponse = {
@@ -71,7 +71,7 @@ var methods = {
     } catch (e) {
       returnResponse.logMsg +=
         " : 205 : " +
-        "GET_USER_DETAILS - Error " +
+        "SAMPLE_GET - Error " +
         " : " +
         JSON.stringify(e) +
         "\n";
