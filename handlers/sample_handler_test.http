@@ -1,0 +1,6 @@
+@localhost = http://127.0.0.1:3000/sample/
+@contentType = application/json
+
+###
+POST {{localhost}}SAMPLE_GET
+Content-Type: {{contentType}}
