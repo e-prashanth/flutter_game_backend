@@ -1,6 +1,20 @@
 @localhost = http://127.0.0.1:3000/game/
 @contentType = application/json
 
-###
+###SAMPLE_GET
 POST {{localhost}}SAMPLE_GET
 Content-Type: {{contentType}}
+
+{
+    
+}
+
+
+###INSERT_EMP_ID_WHEN_GAME_STARTS
+POST {{localhost}}INSERT_EMP_ID_WHEN_GAME_STARTS
+Content-Type: {{contentType}}
+
+{
+    "emp_login_id":"AG0056", 
+    "created_by":1
+}
