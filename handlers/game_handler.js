@@ -56,7 +56,7 @@ var methods = {
       var getParamsResponse = await getParamsResponsePromise;
 
       if (getParamsResponse?.code === 200) {
-        var selectQuery = " SELECT emp_login_id AS EMP_ID ,winning_time AS WIN_TIME "
+        var selectQuery = " SELECT emp_login_id AS EMP_ID ,game_completion_time AS GAME_CMP_TIME,cheat_code_attempt as CHEAT_CODE_ATTEMPT,cheat_code_time AS CHEAT_CODE_TIME "
           + " from " + credentials.INTERNAL_USE_DUMMY_DB_NAME + ".find_jerry_users_played_info "
           + " where emp_login_id = ? and status = 'ACTIVE' ";
         var selectValues = [getParamsResponse.msg[0]];
@@ -72,7 +72,7 @@ var methods = {
             var insertPlayerResponsePromise = mysql.executeQuery(insertQuery, insertValues, credentials, getParamsResponse?.logMsg);
             var insertPlayerResponse = await insertPlayerResponsePromise;
             if (insertPlayerResponse?.code == 200) {
-              returnResponse = { code: 200, msg: {"EMP_ID": getParamsResponse.msg[0], "WIN_TIME": null}, logMsg: insertPlayerResponse?.logMsg };
+              returnResponse = { code: 200, msg: { "EMP_ID": getParamsResponse.msg[0], "GAME_CMP_TIME": null, "CHEAT_CODE_ATTEMPT": 0, "CHEAT_CODE_TIME": null }, logMsg: insertPlayerResponse?.logMsg };
             } else {
               returnResponse = insertPlayerResponse;
             }
@@ -94,5 +94,70 @@ var methods = {
       resolve(returnResponse);
     });
   },
+  UPDATE_GAME_COMPLETION_TIME: async function (event, credentials, logMsg) {
+    // POSITIONS              0           1                               2
+    var reqParams = ["emp_login_id", "game_completion_time_in_sec", "updated_by"];
+    var returnResponse = { code: 201, msg: "Unknown exception. Please contact admin.", logMsg: logMsg, };
+
+    try {
+      var getParamsResponsePromise = getParams.GET_PARAMS(event, reqParams, returnResponse.logMsg);
+      var getParamsResponse = await getParamsResponsePromise;
+      if (getParamsResponse?.code === 200) {
+        var updateQuery = " UPDATE "
+          + credentials.INTERNAL_USE_DUMMY_DB_NAME + ".find_jerry_users_played_info "
+          + " SET game_completion_time = ? , updated_by = ?, updated_on = now() "
+          + " where emp_login_id = ? and status = 'ACTIVE' ";
+        var UpdateQueryValues = [getParamsResponse.msg[1], getParamsResponse.msg[2], getParamsResponse.msg[0]];
+        var mysqlResponsePromise = mysql.executeQuery(updateQuery, UpdateQueryValues, credentials, getParamsResponse?.logMsg);
+        var mysqlResponse = await mysqlResponsePromise;
+        if (mysqlResponse?.code === 200) {
+          returnResponse = { code: 200, msg: "Player game completion time updated successfully.", logMsg: mysqlResponse?.logMsg };
+        } else {
+          returnResponse = mysqlResponse;
+        }
+      } else {
+        returnResponse = getParamsResponse;
+      }
+    } catch (e) {
+      returnResponse.logMsg += " : 205 : " + "UPDATE_GAME_COMPLETION_TIME - Error " + " : " + JSON.stringify(e) + "\n";
+      console.log(e);
+      returnResponse = { code: 205, msg: "Unknown error. Please Contact Admin.", logMsg: returnResponse.logMsg, };
+    }
+    return new Promise((resolve) => {
+      resolve(returnResponse);
+    });
+  },
+  UPDATE_CHEAT_CODE_ATTEMPT_AND_TIME: async function (event, credentials, logMsg) {
+        // POSITIONS         0                    1                 2                     3
+    var reqParams = ["emp_login_id", "cheat_code_attempt", "cheat_code_time", "updated_by"];
+    var returnResponse = { code: 201, msg: "Unknown exception. Please contact admin.", logMsg: logMsg, };
+    try{
+  var getParamsResponsePromise = getParams.GET_PARAMS(event, reqParams, returnResponse.logMsg);
+      var getParamsResponse = await getParamsResponsePromise;
+       if (getParamsResponse?.code === 200) {
+        var updateQuery = " UPDATE "
+          + credentials.INTERNAL_USE_DUMMY_DB_NAME + ".find_jerry_users_played_info "
+          + " SET cheat_code_attempt = ? , cheat_code_time = ? , updated_by = ?, updated_on = now() "
+          + " where emp_login_id = ? and status = 'ACTIVE' ";
+        var UpdateQueryValues = [getParamsResponse.msg[1], getParamsResponse.msg[2],getParamsResponse.msg[3], getParamsResponse.msg[0]];
+        var mysqlResponsePromise = mysql.executeQuery(updateQuery, UpdateQueryValues, credentials, getParamsResponse?.logMsg);
+        var mysqlResponse = await mysqlResponsePromise;
+        if (mysqlResponse?.code === 200) {
+          returnResponse = { code: 200, msg: "Player game completion time updated successfully.", logMsg: mysqlResponse?.logMsg };
+        } else {
+          returnResponse = mysqlResponse;
+        }
+      } else {
+        returnResponse = getParamsResponse;
+      }
+    } catch (e) {
+      returnResponse.logMsg += " : 205 : " + "UPDATE_CHEAT_CODE_ATTEMPT_AND_TIME - Error " + " : " + JSON.stringify(e) + "\n";
+      console.log(e);
+      returnResponse = { code: 205, msg: "Unknown error. Please Contact Admin.", logMsg: returnResponse.logMsg, };
+    }
+      return new Promise((resolve) => {
+      resolve(returnResponse);
+    });
+  }
 };
 module.exports = methods;
