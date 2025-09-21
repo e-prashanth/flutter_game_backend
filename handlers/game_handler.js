@@ -158,6 +158,28 @@ var methods = {
       return new Promise((resolve) => {
       resolve(returnResponse);
     });
-  }
+  },
+  GET_TOP_PLAYERS_FOR_LEADER_BOARD: async function (event, credentials, logMsg) {
+    var returnResponse = { code: 201, msg: "Unknown exception. Please contact admin.", logMsg: logMsg, };
+    try{
+        var getQuery = " SELECT emp_login_id, game_completion_time FROM "
+          + credentials.INTERNAL_USE_DUMMY_DB_NAME + ".find_jerry_users_played_info "
+          + "WHERE status = 'Active' AND game_completion_time IS NOT NULL ORDER BY game_completion_time LIMIT 5";
+        var mysqlResponsePromise = mysql.executeQuery(getQuery, [], credentials, returnResponse.logMsg);
+        var mysqlResponse = await mysqlResponsePromise;
+        if (mysqlResponse?.code === 200) {
+          returnResponse = { code: 200, msg: mysqlResponse.msg, logMsg: mysqlResponse?.logMsg };
+        } else {
+          returnResponse = mysqlResponse;
+        }
+    } catch (e) {
+      returnResponse.logMsg += " : 205 : " + "GET_TOP_PLAYERS_FOR_LEADER_BOARD - Error " + " : " + JSON.stringify(e) + "\n";
+      console.log(e);
+      returnResponse = { code: 205, msg: "Unknown error. Please Contact Admin.", logMsg: returnResponse.logMsg, };
+    }
+      return new Promise((resolve) => {
+      resolve(returnResponse);
+    });
+  },
 };
 module.exports = methods;

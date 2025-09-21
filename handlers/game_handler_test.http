@@ -42,3 +42,8 @@ Content-Type: {{contentType}}
     "cheat_code_time":"2025-09-20 04:30:51", 
     "updated_by":"AG0056"
 }
+
+###GET_TOP_PLAYERS_FOR_LEADER_BOARD
+
+POST {{localhost}}GET_TOP_PLAYERS_FOR_LEADER_BOARD
+Content-Type: {{{{contentType}}}}
